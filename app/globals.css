@@ -57,6 +57,20 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+    .project-tile {
+    height: 150px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+    .description {
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
 }
 
 @layer base {

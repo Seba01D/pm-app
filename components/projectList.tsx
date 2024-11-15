@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 import useUser from "@/app/hook/useUser";
-import { FaFolderOpen, FaCog, FaTrashAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaFolderOpen, FaTrashAlt, FaSignOutAlt } from "react-icons/fa";
 import Link from "next/link";
 import Loader from "@/components/loader/loader";
 
@@ -21,7 +21,10 @@ export default function UserProjects() {
     const [loading, setLoading] = useState(true);
     const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "leave"; projectId: string } | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [activeTab, setActiveTab] = useState<"owned" | "joined">("owned"); // New state for tab selection
+    const [activeTab, setActiveTab] = useState<"owned" | "joined">("owned");
+    const [tooltipContent, setTooltipContent] = useState<string | null>(null);
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         if (user) {
@@ -39,7 +42,7 @@ export default function UserProjects() {
             .from("projects")
             .select("*")
             .eq("owner_id", user.id)
-            .order("created_at", { ascending: true });
+            .order("created_at", { ascending: false });
 
         const { data: joinedData, error: joinedError } = await supabase
             .from("project_members")
@@ -91,6 +94,20 @@ export default function UserProjects() {
         project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const truncateDescription = (description = "", maxLength = 50) =>
+        description.length > maxLength ? `${description.slice(0, maxLength)}...` : description;
+
+    const handleMouseEnter = (description: string, event: React.MouseEvent) => {
+        setTooltipContent(description);
+        setTooltipPosition({ x: event.clientX, y: event.clientY });
+        setTooltipVisible(true);
+    };
+
+    const handleMouseLeave = () => {
+        setTooltipVisible(false);
+        setTooltipContent(null);
+    };
+
     if (userLoading || loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -120,7 +137,17 @@ export default function UserProjects() {
     }
 
     return (
-        <div className="h-screen mx-auto bg-white rounded-lg shadow-lg overflow-y-auto">
+        <div className="h-screen mx-auto bg-white rounded-lg shadow-lg overflow-y-auto relative">
+            {/* Tooltip */}
+           {/*} {tooltipVisible && (
+                <div
+                    className="absolute bg-black text-white text-xs rounded p-2 shadow-lg z-50 max-w-xs"
+                    style={{ top: tooltipPosition.y, left: tooltipPosition.x}}
+                >
+                    {tooltipContent}
+                </div>
+            )}*/}
+
             {/* Header section with sticky search input */}
             <div className="sticky top-0 p-6 bg-white z-10 shadow-sm">
                 <h1 className="text-2xl font-bold text-center text-blue-600 flex items-center justify-center gap-2">
@@ -157,12 +184,18 @@ export default function UserProjects() {
             </div>
 
             {/* Display Projects based on the selected tab */}
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {(activeTab === "owned" ? filteredOwnedProjects : filteredJoinedProjects).map((project) => (
                     <Link key={project.id} href={`/projects/${project.id}`}>
-                        <div className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-200 cursor-pointer">
+                        <div className="project-tile bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-200 cursor-pointer">
                             <h2 className="text-lg font-semibold text-blue-700">{project.name}</h2>
-                            <p className="text-gray-600 text-sm mt-2">{project.description || "No description available"}</p>
+                            <p
+                                className="text-gray-600 text-sm mt-2 description"
+                                onMouseEnter={(e) => handleMouseEnter(project.description || "No description available", e)}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                {truncateDescription(project.description || "No description available")}
+                            </p>
                             <p className="text-gray-400 text-xs mt-1">Created at: {new Date(project.created_at).toLocaleDateString()}</p>
                             <div className="flex justify-end space-x-2 mt-4">
                                 {project.isOwner ? (

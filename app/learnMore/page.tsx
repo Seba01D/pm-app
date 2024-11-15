@@ -28,7 +28,7 @@ export default function page() {
 
         <div className="flex flex-col items-center">
           <a
-            href="https://github.com/yourusername/yourprojectrepo"
+            href="https://github.com/Seba01D/pm-app/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 text-blue-600 font-semibold hover:text-blue-500 transition"

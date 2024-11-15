@@ -41,6 +41,9 @@ export default function SignIn() {
 	return (
 		<div className="w-full sm:w-[26rem] shadow sm:p-5  border dark:border-zinc-800 rounded-md">
 			<div className="p-5 space-y-5">
+			<a href="/" className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-all">
+			← 
+			</a>
 				<div className="text-center space-y-3">
 					<h1 className="font-bold">Sign in to SupaAuth</h1>
 					<p className="text-sm">
@@ -53,7 +56,7 @@ export default function SignIn() {
 					<div className="text-sm">or</div>
 					<div className="flex-1 h-[0.5px] w-full bg-zinc-400 dark:bg-zinc-800"></div>
 				</div>
-				<SignInForm redirectTo={next || "/"} />
+				<SignInForm redirectTo={next || "/dashboard"} />
 			</div>
 		</div>
 	);
