@@ -98,7 +98,7 @@ export default function ProjectDetails() {
                     {project.name}
                 </h1>
                 {project.access_code && (
-                    <div className="p-2 rounded-xl border-white bg-white flex items-center space-x-2">
+                    <div className="p-2 rounded-xl border-white bg-white flex items-center space-x-2 ">
                         <span className="text-m font-medium text-gray-800">
                             {project.access_code}
                         </span>
