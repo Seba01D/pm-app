@@ -1,6 +1,7 @@
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
 export interface Tile {
+  created_at: string | number | Date;
   id: string;
   name: string;
   project_id: string;

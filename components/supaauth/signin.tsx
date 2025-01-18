@@ -45,12 +45,12 @@ export default function SignIn() {
 			← 
 			</a>
 				<div className="text-center space-y-3">
-					<h1 className="font-bold">Sign in to SupaAuth</h1>
+					<h1 className="font-bold">Sign in to PManager</h1>
 					<p className="text-sm">
 						Welcome back! Please sign in to continue
 					</p>
 				</div>
-				<Social redirectTo={next || "/"} />
+				<Social redirectTo={next || "/dashboard"} />
 				<div className="flex items-center gap-5">
 					<div className="flex-1 h-[0.5px] w-full bg-zinc-400 dark:bg-zinc-800"></div>
 					<div className="text-sm">or</div>

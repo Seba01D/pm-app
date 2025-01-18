@@ -30,7 +30,7 @@ export default function Register() {
 						Welcome! Please fill in the details to get started.
 					</p>
 				</div>
-				<Social redirectTo={next || "/"} />
+				<Social redirectTo={next || "/dashboard"} />
 				<div className="flex items-center gap-5">
 					<div className="flex-1 h-[0.5px] w-full bg-zinc-400 dark:bg-zinc-800"></div>
 					<div className="text-sm">or</div>

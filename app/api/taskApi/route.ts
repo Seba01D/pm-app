@@ -1,5 +1,5 @@
 import { createSupabaseBrowser } from "@/lib/supabase/client";
-import { Task } from "@/app/types";
+import { Priority, Task } from "@/app/types";
 
 export const fetchTasksForTile = async (tileId: string): Promise<Task[]> => {
   const supabase = createSupabaseBrowser();
@@ -83,5 +83,33 @@ export const updateTaskDetails = async (
   if (error) {
     console.error("Error updating task details:", error);
     throw error;
+  }
+};
+
+export const fetchPriorities = async (): Promise<Priority[]> => {
+  const supabase = createSupabaseBrowser();
+  const { data, error } = await supabase
+    .from("priorities")
+    .select("*"); 
+
+  if (error) {
+    console.error("Error fetching priorities:", error);
+    throw error;
+  }
+  return data || [];
+};
+
+export const updateTaskPriority = async (taskId: string, priorityId: string): Promise<void> => {
+  const supabase = createSupabaseBrowser();
+  const { error } = await supabase
+    .from("tasks")
+    .update({ priority_id: priorityId }) // Zmieniamy priorytet
+    .eq("id", taskId); // Szukamy zadania po id
+
+  if (error) {
+    console.error("Error updating task priority:", error);
+    throw error;
+  } else {
+    console.log("Task priority updated successfully");
   }
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaPlus, FaCheck, FaTimes, FaEdit, FaTrash } from "react-icons/fa";
+import { FaPlus, FaCheck, FaTimes, FaTrash } from "react-icons/fa";
 import TileComponent from "./tileComponent";
 import { addTile, deleteTile, fetchTiles, Tile, updateTile } from "@/app/api/tileApi/route";
 
@@ -19,7 +19,10 @@ export default function CreatedNewTask({ projectId }: CreatedNewTaskProps) {
   useEffect(() => {
     const loadTiles = async () => {
       const tilesData = await fetchTiles(projectId);
-      setTiles(tilesData);
+      const sortedTiles = tilesData.sort((a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+      setTiles(sortedTiles);
     };
     loadTiles();
   }, [projectId]);
@@ -90,16 +93,6 @@ export default function CreatedNewTask({ projectId }: CreatedNewTaskProps) {
               ) : (
                 <>
                   <button
-                    onClick={() => {
-                      setEditingTileId(tile.id);
-                      setEditTileName(tile.name);
-                    }}
-                    className="text-gray-500 hover:text-blue-500 transition"
-                    aria-label="Edit"
-                  >
-                    <FaEdit size={16} />
-                  </button>
-                  <button
                     onClick={() => handleDeleteTile(tile.id)}
                     className="text-gray-500 hover:text-red-500 transition"
                     aria-label="Delete"
@@ -119,7 +112,7 @@ export default function CreatedNewTask({ projectId }: CreatedNewTaskProps) {
                 value={tileName}
                 onChange={(e) => setTileName(e.target.value)}
                 placeholder="Enter tile name"
-                maxLength={20}
+                maxLength={16}
                 className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500 focus:ring-0 placeholder-gray-500"
               />
               <button
@@ -138,14 +131,14 @@ export default function CreatedNewTask({ projectId }: CreatedNewTaskProps) {
               </button>
             </div>
           ) : (
-          <button
+            <button
               onClick={() => setIsAddingTile(true)}
               className="p-3 h-10 w-80 bg-black bg-opacity-20 text-white flex items-center 
                         rounded-xl shadow-md hover:bg-black hover:bg-opacity-30 hover:text-gray-500 
                         transition flex-shrink-0 snap-start"
             >
               <FaPlus className="mr-2" /> Add another list
-          </button>
+            </button>
           )}
         </div>
       </div>
